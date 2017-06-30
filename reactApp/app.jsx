@@ -2,13 +2,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const dummyData = ['Rake the leaves', 'Feed my rabbit', 'Bear children'];
+const dummyData = [
+  { taskText: 'rake the leaves', completed: true },
+  { taskText: 'feed my rabbit', completed: false },
+  { taskText: 'bear children', completed: false },
+];
 
 class TodoList extends React.Component {
   render() {
     return (
       <ul>
-        {dummyData.map(task => <Todo task={task} />)}
+        {this.props.todos.map(taskObj => <Todo task={taskObj} />)}
       </ul>
     );
   }
@@ -22,7 +26,9 @@ class Todo extends React.Component {
     return (
       <li>
         <button>X</button>
-        {this.props.task}
+        {this.props.task.completed ?
+          <strike>{this.props.task.taskText}</strike> :
+          this.props.task.taskText}
       </li>
     );
   }
@@ -40,11 +46,22 @@ class InputLine extends React.Component {
 }
 
 class TodoApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      todos: [],
+    };
+  }
+  componentDidMount() {
+    this.setState({
+      todos: dummyData,
+    });
+  }
   render() {
     return (
       <div>
         <InputLine />
-        <TodoList />
+        <TodoList todos={this.state.todos} />
       </div>
     )
   }
